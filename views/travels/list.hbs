@@ -1,3 +1,23 @@
-{{#each travels}}
-    <p>{{destino}}</p>
-{{/each}}
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Destino</th>
+            <th scope="col">Salida</th>
+            <th scope="col">Llegada</th>
+            <th scope="col">Precio</th>
+            <th scope="col">Descuento</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each travels}}
+        <tr>
+            <td>{{destino}}</td>
+            <td>{{fecha_salida}}</td>
+            <td>{{fecha_llegada}}</td>
+            <td>{{precio}}</td>
+            <td>{{descuento}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<a href="" class="btn btn-primary">Add Travel</a>

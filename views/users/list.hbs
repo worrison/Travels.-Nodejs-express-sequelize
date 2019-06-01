@@ -1,3 +1,19 @@
-{{#each users}}
-    <p>{{name}}</p>
-{{/each}}
+<table class="table">
+    <thead class="thead-light">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Rol</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each users}}
+        <tr>
+            <td>{{name}}</td>
+            <td>{{email}}</td>
+            <td>{{#if rol}}Admin{{else}}User{{/if}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<a href="" class="btn btn-primary">Add user</a>
