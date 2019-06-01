@@ -8,4 +8,13 @@ router.get('/', async (req, res) => {
     res.render('../views/travels/list',{travels});
 });
 
+router.get('/add', function (req, res) {
+    res.render('../views/travels/add');
+});
+
+router.post('/add', async function(req, res) {
+    let travel = await travelsController.addTravel(req.body);
+     res.render('../views/travels/added',{travel})
+     
+  });
 module.exports = router;
