@@ -5,7 +5,23 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     rol:DataTypes.BOOLEAN
-  });
+    
+  }, {
+    uniqueKeys: {
+        Items_unique: {
+            fields: ['email']
+        }
+    }});
+
+  
+
+
+
+
+
+
+
+
 
   user.associate = function(models) {
     // models.Cancion.hasMany(models.Task);
