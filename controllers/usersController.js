@@ -8,15 +8,20 @@ function listUsers()
 }
 
 async function register(email,password,name){
-
-    let hash = await bcrypt.hash(password, SALT_ROUNDS );
-    let user = {
+    if(email !="" & password !="" & name !="")
+    {
+        let hash = await bcrypt.hash(password, SALT_ROUNDS );
+        let user = {
         password: hash,
         email, 
         name,
     }
     return models.user.create(user);
+    }
+    
+    
 }
+        
 
 async function checkLogin(email, password){
     
@@ -26,11 +31,8 @@ async function checkLogin(email, password){
     }else{
         // Comparar contraseñas
         let match = await bcrypt.compare(password, user[0].password);
-        console.log("resultado", match);
-        console.log("user", user[0].id);
         return match ? user[0] : null;
-    }
-           
+    }    
 }
 
 module.exports = {
