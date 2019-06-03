@@ -17,8 +17,13 @@
       </li>
     </ul>
     <ul class="form-inline my-2 my-lg-0">
-      <a href="/users/login" class="btn">Login</a>
-      <a href="/users/destroy" class="btn">Salir</a>
+      {{#if user.name}}
+          <p>Bienvenido:{{user.name}} </p><a href="/users/destroy" class="btn">Salir</a>
+      {{else}}
+           <a href="/users/login" class="btn">Login</a>
+      {{/if}}
+     
+      
     </ul>
   </div>
 </nav>
