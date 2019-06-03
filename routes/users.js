@@ -10,6 +10,10 @@ router.get('/', async (req, res) => {
     });
 });
 
+router.get('/destroy', (req, res) => {
+  req.session.destroy();
+  res.redirect('/');
+});
 
 router.get('/login', (req, res) => {
     let error = req.flash('errors');
@@ -36,6 +40,7 @@ router.get('/login', (req, res) => {
         req.session.email = user.email;
         req.session.name = user.name;
         req.session.userId = user.id;
+        req.session.rol = user.rol;
         req.session.logginDate = new Date();
         res.redirect('/travels');
       }else{
