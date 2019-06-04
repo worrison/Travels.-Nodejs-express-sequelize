@@ -57,19 +57,13 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/register', function (req, res) {
-  if (req.session.rol == 1) {
       res.render('../views/users/register');
-  }
-  else{
-      req.flash('permisos', 'Usuario No tiene permisos');
-      res.redirect('/');
-  }
 });
 
 router.post('/register', async (req, res) => {
     let { email, name, password} = req.body;
     let isRegistered = await usersController.register(email, password, name);
-  
+    console.log("registrado",isRegistered);
     if(isRegistered){
       res.redirect('/users/login')
     }else{

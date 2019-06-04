@@ -4,7 +4,7 @@ let travelsController = require('../controllers/travelsController');
 
 /* GET users listing. */
 router.get('/', async (req, res) => {
-    if (req.session.rol == 1) {
+    if (req.session.rol >= 0) {
         let travels = await travelsController.listTravels();
         res.render('../views/travels/list', {
             travels

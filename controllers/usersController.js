@@ -10,16 +10,20 @@ function listUsers()
 async function register(email,password,name){
     if(email !="" & password !="" & name !="")
     {
-        let hash = await bcrypt.hash(password, SALT_ROUNDS );
-        let user = {
-        password: hash,
-        email, 
-        name,
+        let userLf = await models.user.findAll({ where: { email: email } });
+        console.log("usuario",userLf.length);
+        if(userLf.length === 0)//no existe en la base de datos el usuario
+        {
+                let hash = await bcrypt.hash(password, SALT_ROUNDS );
+                let user = {
+                password: hash,
+                email, 
+                name,
+                }
+                return models.user.create(user);
+        }
+        
     }
-    return models.user.create(user);
-    }
-    
-    
 }
         
 
