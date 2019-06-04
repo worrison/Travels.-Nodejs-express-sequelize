@@ -63,7 +63,6 @@ router.get('/register', function (req, res) {
 router.post('/register', async (req, res) => {
     let { email, name, password} = req.body;
     let isRegistered = await usersController.register(email, password, name);
-    console.log("registrado",isRegistered);
     if(isRegistered){
       res.redirect('/users/login')
     }else{

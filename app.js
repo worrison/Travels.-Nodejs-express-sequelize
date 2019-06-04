@@ -7,6 +7,16 @@ var logger = require('morgan');
 var session = require('express-session');
 var hbs= require('hbs');
 
+/* icons import */
+// let library = require('@fortawesome/fontawesome-svg-core');
+// let fas = require('@fortawesome/free-solid-svg-icons'); 
+// let far = require('@fortawesome/free-regular-svg-icons'); 
+// let fab = require('@fortawesome/free-brands-svg-icons'); 
+
+// library.add(fas, far, fab);
+
+/***/
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var travelsRouter = require('./routes/travels');

@@ -6,6 +6,7 @@
     "start": "nodemon ./bin/www -e js,hbs,html"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.18",
     "bcrypt": "^3.0.6",
     "bower": "^1.8.8",
     "connect": "^3.7.0",
