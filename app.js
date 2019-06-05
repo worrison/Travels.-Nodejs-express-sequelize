@@ -20,6 +20,8 @@ var hbs= require('hbs');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var travelsRouter = require('./routes/travels');
+var ApiRouterTravels = require('./routes/Api/travel');
+// var ApiRouterUsers = require('./routes/Api/user');
 
 
 var app = express();
@@ -51,6 +53,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/travels', travelsRouter);
+app.use('/Api/travel', ApiRouterTravels);
+// app.use('/Api/user', ApiRouterUsers);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
