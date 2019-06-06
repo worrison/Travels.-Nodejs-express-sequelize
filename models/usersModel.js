@@ -10,21 +10,12 @@ module.exports = (sequelize, DataTypes) => {
     uniqueKeys: {
         Items_unique: {
             fields: ['email']
-        }
-    }});
-
-  
-
-
-
-
-
-
-
-
+        }    
+    }
+  });
 
   user.associate = function(models) {
-    // models.Cancion.hasMany(models.Task);
+    models.user.hasMany(models.travel)
   };
 
   return user;

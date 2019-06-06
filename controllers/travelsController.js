@@ -2,8 +2,18 @@ let models = require('../models');
 
 function listTravels()
 {
-    return models.travel.findAll()
+    return models.travel.findAll({
+        include: [{
+          model: models.user
+        }]
+      })
 }
+
+// {
+//     where:{
+//         userId:req.session.userId
+//     }
+// }
 
 function addTravel(travel)
 {

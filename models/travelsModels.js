@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   travel.associate = function(models) {
-    // models.Cancion.hasMany(models.Task);
+    models.travel.belongsTo(models.user)
   };
 
   return travel;
