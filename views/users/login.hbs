@@ -3,6 +3,11 @@
         ERROR: {{error}}
     </div>
 {{/if}}
+{{#if activar}}
+    <div class="alert aler-danger" role="alert">
+        Aviso: {{activar}}
+    </div>
+{{/if}}
 <form action="/users/login" method="post" class="container">
     <div class="form-group">
         <label for="email">Email</label>

@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    rol:DataTypes.BOOLEAN
+    rol: DataTypes.BOOLEAN,
+    active: DataTypes.BOOLEAN
     
   }, {
     uniqueKeys: {

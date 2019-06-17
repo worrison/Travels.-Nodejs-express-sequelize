@@ -1,6 +1,43 @@
 let express = require('express');
 let router = express.Router();
 let usersController = require('../controllers/usersController');
+let hbs = require('nodemailer-express-handlebars');
+const EMAIL = require('../config/emailConfig')
+
+
+let options = {
+    viewEngine: {
+        extname: '.hbs',
+        layoutsDir: './views/email_templates/layout',
+        defaultLayout : 'email-body.hbs',
+        partialsDir : './views/email_templates/partials/'
+    },
+    viewPath: 'views/email_templates',
+    extName: '.hbs'
+  };
+  EMAIL.transportar.use('compile',hbs(options));
+  // email.transportar.use('compile', hbs(options));
+  
+  let message={
+    
+    to:'victorordaxantolin@gmail.com',
+    subject:'ACTIVACIÓN DE USUARIO',
+    template:'email-template',
+    context:{
+      name:'Activación de cuenta',
+      url:"https://miviaje.com/wp-content/uploads/2017/12/landmannalaugar-en-islandia.jpg"
+      
+    },
+    attachments:[
+      {
+        filename:'paciencia.jpg',
+        path:`${__dirname}/../paciencia.jpg`,
+        content:'aqui tienes'
+      }
+    ]
+  
+  }
+
 
 /* GET users listing. */
 router.get('/', async (req, res) => {
@@ -35,25 +72,31 @@ router.get('/login', (req, res) => {
 router.post('/login', async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
-    
-    if(!email || !password){
-        req.flash('errors', 'Falta usuario o contraseña');
-        res.redirect('/users/login')
-    } else {
-        let user = await usersController.checkLogin(email,password);
-    if(user){
-        req.session.email = user.email;
-        req.session.name = user.name;
-        req.session.userId = user.id;
-        req.session.rol = user.rol;
-        req.session.logginDate = new Date();
-        res.redirect('/travels');
-    }else{
-        req.flash('errors', 'Usuario o contraseña inválido');
-        res.redirect('/users/login');
+    let actived= await usersController.actived(email)
+    if (actived)
+    {
+          if(!email || !password){
+            req.flash('errors', 'Falta usuario o contraseña');
+            res.redirect('/users/login')
+          } else {
+            let user = await usersController.checkLogin(email,password);
+            if(user){
+                req.session.email = user.email;
+                req.session.name = user.name;
+                req.session.userId = user.id;
+                req.session.rol = user.rol;
+                req.session.logginDate = new Date();
+                res.redirect('/travels');
+            }else{
+                req.flash('errors', 'Usuario o contraseña inválido');
+                res.redirect('/users/login');
+            }
+          }
     }
-  }
-  
+    else{
+            req.flash('errors', 'Active su cuenta');
+            res.redirect('/users/login')
+    }
 });
 
 router.get('/register', function (req, res) {
@@ -64,7 +107,19 @@ router.post('/register', async (req, res) => {
     let { email, name, password} = req.body;
     let isRegistered = await usersController.register(email, password, name);
     if(isRegistered){
-      res.redirect('/users/login')
+             
+              EMAIL.transportar.sendMail(message,(error,info) => {
+                console.log(error);
+                if(error){
+                  req.flash('activar', 'se registró pero no se pudo mandar el email de activación de su cuenta');
+                  res.redirect('/users/register')
+                }else
+                {
+                    EMAIL.transportar.close();
+                    req.flash('activar', 'comprueba su email para activar su cuenta');
+                    res.redirect('/users/login')
+                }
+              })
     }else{
       req.flash('permisos', 'No se pudo registrar faltan cmapos por rellenar');
       res.redirect('/users/register');
@@ -72,3 +127,4 @@ router.post('/register', async (req, res) => {
 });
 
 module.exports = router;
+

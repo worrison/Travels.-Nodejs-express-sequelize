@@ -2,6 +2,7 @@ let models = require('../models');
 const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
 
+
 function listUsers()
 {
     return models.user.findAll()
@@ -20,6 +21,7 @@ async function register(email,password,name){
                 email, 
                 name,
                 }
+               
                 return models.user.create(user);
         }
         
@@ -38,9 +40,16 @@ async function checkLogin(email, password){
         return match ? user[0] : null;
     }    
 }
+async function actived(email){
+    console.log('valor email',email);
+    let user = await models.user.findAll({ where: { email: email } })
+    console.log('usuario',user);
+    return user.active===1 ? true:false
+}
 
 module.exports = {
     listUsers,
     register,
-    checkLogin
+    checkLogin,
+    actived
 };
