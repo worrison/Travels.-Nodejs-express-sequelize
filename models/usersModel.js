@@ -5,8 +5,11 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     password: DataTypes.STRING,
     rol: DataTypes.BOOLEAN,
-    active: DataTypes.BOOLEAN
-    
+    active: {
+      type:DataTypes.BOOLEAN,
+      defaultValue : 0
+    }
+
   }, {
     uniqueKeys: {
         Items_unique: {
@@ -18,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
   user.associate = function(models) {
     models.user.hasMany(models.travel)
   };
+
+  
 
   return user;
 };

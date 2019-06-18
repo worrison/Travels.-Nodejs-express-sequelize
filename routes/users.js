@@ -6,37 +6,17 @@ const EMAIL = require('../config/emailConfig')
 
 
 let options = {
-    viewEngine: {
-        extname: '.hbs',
-        layoutsDir: './views/email_templates/layout',
-        defaultLayout : 'email-body.hbs',
-        partialsDir : './views/email_templates/partials/'
-    },
-    viewPath: 'views/email_templates',
-    extName: '.hbs'
-  };
-  EMAIL.transportar.use('compile',hbs(options));
-  // email.transportar.use('compile', hbs(options));
-  
-  let message={
-    
-    to:'victorordaxantolin@gmail.com',
-    subject:'ACTIVACIÓN DE USUARIO',
-    template:'email-template',
-    context:{
-      name:'Activación de cuenta',
-      url:"https://miviaje.com/wp-content/uploads/2017/12/landmannalaugar-en-islandia.jpg"
-      
-    },
-    attachments:[
-      {
-        filename:'paciencia.jpg',
-        path:`${__dirname}/../paciencia.jpg`,
-        content:'aqui tienes'
-      }
-    ]
-  
-  }
+  viewEngine: {
+    extname: '.hbs',
+    layoutsDir: './views/email_templates/layout',
+    defaultLayout: 'email-body.hbs',
+    partialsDir: './views/email_templates/partials/'
+  },
+  viewPath: 'views/email_templates',
+  extName: '.hbs'
+};
+EMAIL.transportar.use('compile', hbs(options));
+// email.transportar.use('compile', hbs(options));
 
 
 /* GET users listing. */
@@ -44,10 +24,9 @@ router.get('/', async (req, res) => {
   if (req.session.rol == 1) {
     let users = await usersController.listUsers();
     res.render('../views/users/list', {
-        users
+      users
     });
-  }
-  else{
+  } else {
     req.flash('permisos', 'usuario sin permisos');
     res.redirect('/');
   }
@@ -59,72 +38,104 @@ router.get('/destroy', (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-    let error = req.flash('errors');
-    if(req.session.name){
-      res.redirect('/');
-    }else{
-      res.render('../views/users/login', {
-        error
-      });
-    }
-  });
+  let error = req.flash('errors');
+  if (req.session.name) {
+    res.redirect('/');
+  } else {
+    res.render('../views/users/login', {
+      error
+    });
+  }
+});
 
 router.post('/login', async (req, res) => {
-    let email = req.body.email;
-    let password = req.body.password;
-    let actived= await usersController.actived(email)
-    if (actived)
-    {
-          if(!email || !password){
-            req.flash('errors', 'Falta usuario o contraseña');
-            res.redirect('/users/login')
-          } else {
-            let user = await usersController.checkLogin(email,password);
-            if(user){
-                req.session.email = user.email;
-                req.session.name = user.name;
-                req.session.userId = user.id;
-                req.session.rol = user.rol;
-                req.session.logginDate = new Date();
-                res.redirect('/travels');
-            }else{
-                req.flash('errors', 'Usuario o contraseña inválido');
-                res.redirect('/users/login');
-            }
-          }
+  let email = req.body.email;
+  let password = req.body.password;
+  let actived = await usersController.actived(email)
+  if (actived) {
+    if (!email || !password) {
+      req.flash('errors', 'Falta usuario o contraseña');
+      res.redirect('/users/login')
+    } else {
+      let user = await usersController.checkLogin(email, password);
+      if (user) {
+        req.session.email = user.email;
+        req.session.name = user.name;
+        req.session.userId = user.id;
+        req.session.rol = user.rol;
+        req.session.logginDate = new Date();
+        res.redirect('/travels');
+      } else {
+        req.flash('errors', 'Usuario o contraseña inválido');
+        res.redirect('/users/login');
+      }
     }
-    else{
-            req.flash('errors', 'Active su cuenta');
-            res.redirect('/users/login')
-    }
+  } else {
+    req.flash('errors', 'Active su cuenta');
+    res.redirect('/users/login')
+  }
 });
 
 router.get('/register', function (req, res) {
-      res.render('../views/users/register');
+  res.render('../views/users/register');
 });
 
 router.post('/register', async (req, res) => {
-    let { email, name, password} = req.body;
-    let isRegistered = await usersController.register(email, password, name);
-    if(isRegistered){
-             
-              EMAIL.transportar.sendMail(message,(error,info) => {
-                console.log(error);
-                if(error){
-                  req.flash('activar', 'se registró pero no se pudo mandar el email de activación de su cuenta');
-                  res.redirect('/users/register')
-                }else
-                {
-                    EMAIL.transportar.close();
-                    req.flash('activar', 'comprueba su email para activar su cuenta');
-                    res.redirect('/users/login')
-                }
-              })
-    }else{
-      req.flash('permisos', 'No se pudo registrar faltan cmapos por rellenar');
-      res.redirect('/users/register');
+  let {
+    email,
+    name,
+    password
+  } = req.body;
+  let isRegistered = await usersController.register(email, password, name);
+  console.log("emaill", email);
+  let idUser = await usersController.userId(email)
+  console.log('id usuario 1', idUser[0].id);
+  let hash = await usersController.hashear(idUser[0].id,idUser[0].password)
+  console.log("omg",hash);
+  if (isRegistered) {
+
+    let message = {
+
+      to: email,
+      subject: 'ACTIVACIÓN DE USUARIO',
+      template: 'email-template',
+      context: {
+        name: 'Activación de cuenta',
+        url: "http://127.0.0.1:3000/users/active/"+ hash.cadena
+
+      },
+      attachments: [{
+        filename: 'paciencia.jpg',
+        path: `${__dirname}/../paciencia.jpg`,
+        content: 'aqui tienes'
+      }]
+
     }
+
+    EMAIL.transportar.sendMail(message, (error, info) => {
+      console.log(error);
+      if (error) {
+        req.flash('activar', 'se registró pero no se pudo mandar el email de activación de su cuenta');
+        res.redirect('/users/register')
+      } else {
+        EMAIL.transportar.close();
+        req.flash('activar', 'comprueba su email para activar su cuenta');
+        res.redirect('/users/login')
+      }
+    })
+  } else {
+    req.flash('permisos', 'No se pudo registrar faltan cmapos por rellenar');
+    res.redirect('/users/register');
+  }
+});
+
+
+router.get('/active/:hash', async function (req, res) {
+  console.log("buenas noches",req.params.hash);
+  let encript=encodeURIComponent(req.params.hash)
+  let active = await usersController.active(encript);
+  console.log("active value",active);
+  res.render('../views/users/register');
 });
 
 module.exports = router;
-
