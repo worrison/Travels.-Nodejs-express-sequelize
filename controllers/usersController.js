@@ -16,7 +16,6 @@ async function register(email,password,name){
         if(userLf.length === 0)//no existe en la base de datos el usuario
         {
                 let hash = await bcrypt.hash(password, SALT_ROUNDS );
-                hash=encodeURIComponent(hash);
                 let user = {
                 password: hash,
                 email, 
@@ -66,8 +65,9 @@ async function active(hashLink)
 
 async function hashear(id,pass)
 {
+    let hash=encodeURIComponent(pass);
     console.log("idididi",id);
-    let combinacion=pass + id
+    let combinacion=hash + id
     let hashLink={
         cadena:combinacion,
         userId:id
