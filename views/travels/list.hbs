@@ -27,10 +27,10 @@
             <td>{{descuento}}</td>
             <td>{{user.name}}</td>
             <td><a href="">edit</a></td>
-            <td><a href="">X</a></td>
+            <td><a href="/travels/delete/{{id}}">X</a></td>
         </tr>
         {{/each}}
     </tbody>
 </table>
-<a href="/travels/add" class="btn btn-primary">Add Travel</a>
+     {{#if rolUser}}<a href="/travels/add" class="btn btn-primary">Add Travel</a>{{/if}}
 </section>

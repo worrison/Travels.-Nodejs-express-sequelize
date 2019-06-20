@@ -6,9 +6,11 @@ let upload = require('../config/multer')
 /* GET users listing. */
 router.get('/', async (req, res) => {
     if (req.session.rol >= 0) {
+        let rolUser = req.session.rol
         let travels = await travelsController.listTravels();
         res.render('../views/travels/list', {
-            travels
+            travels,
+            rolUser
         });
     } else {
         req.flash('error', 'usuario sin permisos');
@@ -21,7 +23,7 @@ router.get('/add', function (req, res) {
     if (req.session.rol == 1) {
         res.render('../views/travels/add');
     } else {
-        req.flash('permisos', 'usuario sin permisos');
+        req.flash('error', 'usuario sin permisos');
         res.redirect('/travels');
     }
 });
@@ -46,6 +48,13 @@ router.post('/add', upload.array("file"), async function (req, res) {
         res.redirect('/travels');
     }
 });
+
+router.post('/delete/:id', async function (req, res){
+    console.log("borramos",req.params.id)
+    if (req.session.rol == 1) {
+        let deleteTravel = await travelsController.removeTravel(req.params.id);
+    }
+})
 
 
 module.exports = router;

@@ -21,6 +21,11 @@ function addTravel(travel,userId)
   }
   return models.travel.create(travelAdd);
 }
+function removeTravel(travelId)
+{
+ 
+  return models.travel.destroy({ where: { id: travelId } }).then()
+}
 
 function uploadImages(idTravel,urlImage)
 {
@@ -30,5 +35,6 @@ function uploadImages(idTravel,urlImage)
 module.exports = {
     listTravels,
     addTravel,
-    uploadImages
+    uploadImages,
+    removeTravel
 };
