@@ -7,21 +7,10 @@ var logger = require('morgan');
 var session = require('express-session');
 var hbs= require('hbs');
 
-
-/* icons import */
-// let library = require('@fortawesome/fontawesome-svg-core');
-// let fas = require('@fortawesome/free-solid-svg-icons'); 
-// let far = require('@fortawesome/free-regular-svg-icons'); 
-// let fab = require('@fortawesome/free-brands-svg-icons'); 
-
-// library.add(fas, far, fab);
-
-/***/
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var travelsRouter = require('./routes/travels');
-// var imagesRouter = require('./routes/images');
+
 var ApiRouterTravels = require('./routes/api/travel');
 // var ApiRouterUsers = require('./routes/Api/user');
 
@@ -62,7 +51,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-// app.use('/images', travelsRouter);
 app.use('/travels', travelsRouter);
 app.use('/api/travels', ApiRouterTravels);
 // app.use('/Api/user', ApiRouterUsers);

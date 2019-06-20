@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
             travels
         });
     } else {
-        req.flash('permisos', 'usuario sin permisos');
+        req.flash('error', 'usuario sin permisos');
         res.redirect('/');
 
     }
@@ -28,9 +28,7 @@ router.get('/add', function (req, res) {
 
 router.post('/add', upload.array("file"), async function (req, res) {
     if (req.session.rol == 1) {
-        console.log("idusuariologueado",req.session.userId);
         let travel = await travelsController.addTravel(req.body,req.session.userId);
-        console.log("sale Id???",travel.id);
         if(!req.files)
         {
             return res.status(500).send('No has seleccionado un archivo valido')
@@ -38,12 +36,11 @@ router.post('/add', upload.array("file"), async function (req, res) {
         {
             let images = await travelsController.uploadImages(travel.id,req.files)
         }
-           
-        
-        
+        req.flash('permisos', 'viaje creado de lujo');
         res.render('../views/travels/added', {
             travel
         })
+
     } else {
         req.flash('permisos', 'usuario sin permisos para crear viaje');
         res.redirect('/travels');

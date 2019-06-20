@@ -4,7 +4,9 @@ module.exports = (sequelize, DataTypes) => {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
     password: DataTypes.STRING,
-    rol: DataTypes.BOOLEAN,
+    rol: {
+      type:DataTypes.BOOLEAN,
+      defaultValue : 0},
     active: {
       type:DataTypes.BOOLEAN,
       defaultValue : 0

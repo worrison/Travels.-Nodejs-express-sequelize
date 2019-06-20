@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
     cadena: DataTypes.STRING
   });
 
-    hash.associate = function(models) {
+  hash.associate = function(models) {
     models.hash.belongsTo(models.user)
   };
 
