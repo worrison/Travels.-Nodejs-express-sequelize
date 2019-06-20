@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let travelsController = require('../controllers/travelsController');
+let upload = require('../config/multer')
 
 /* GET users listing. */
 router.get('/', async (req, res) => {
@@ -25,9 +26,21 @@ router.get('/add', function (req, res) {
     }
 });
 
-router.post('/add', async function (req, res) {
+router.post('/add', upload.array("file"), async function (req, res) {
     if (req.session.rol == 1) {
-        let travel = await travelsController.addTravel(req.body);
+        console.log("idusuariologueado",req.session.userId);
+        let travel = await travelsController.addTravel(req.body,req.session.userId);
+        console.log("sale Id???",travel.id);
+        if(!req.files)
+        {
+            return res.status(500).send('No has seleccionado un archivo valido')
+        }else
+        {
+            let images = await travelsController.uploadImages(travel.id,req.files)
+        }
+           
+        
+        
         res.render('../views/travels/added', {
             travel
         })

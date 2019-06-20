@@ -21,6 +21,7 @@ var hbs= require('hbs');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var travelsRouter = require('./routes/travels');
+// var imagesRouter = require('./routes/images');
 var ApiRouterTravels = require('./routes/api/travel');
 // var ApiRouterUsers = require('./routes/Api/user');
 
@@ -61,6 +62,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+// app.use('/images', travelsRouter);
 app.use('/travels', travelsRouter);
 app.use('/api/travels', ApiRouterTravels);
 // app.use('/Api/user', ApiRouterUsers);
