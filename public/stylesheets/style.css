@@ -1,8 +1,72 @@
 body {
-  padding: 50px;
+  padding: 0px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
 }
+a.navbar-brand img {
+  height: 40px;
+}
+.navbar
+{
+  z-index: 999;
+}
+#carouselExampleControls
+{
+  /* margin-top: -100px; */
+  z-index: 99;
+}
+.card{
+  margin: 10px;
+  padding: 0px;
+}
+
+.video-fluid {
+  width: 100%;
+  height: auto;
+  /* margin-top: -15%; */
+}
+.carousel-caption {
+  position: absolute;
+  right: 15%;
+  left: 15%;
+  z-index: 10;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  color: #fff;
+  text-align: center;
+  top: 0;
+  margin-top: 20%;
+  font-weight: 900;
+}
+.animated.fadeInDown {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.pl-0, .px-0 {
+  padding-left: 0 !important;
+  max-width: 900px;
+}
+.h3-responsive{
+  font-size: 4rem!important;
+}
+.input-group.md-form.form-sm.form-2 input.lime-border {
+  border: 1px solid #ffcd00!important;
+  height: 50px;
+  
+  }
+.lime.lighten-2 {
+    background-color: #ffcd00!important;
+}
+footer{
+  height: 40px;
+  background-color: black
+}
+
+
+
+

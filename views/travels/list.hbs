@@ -3,8 +3,8 @@
         ERROR: {{error}}
     </div>
 {{/if}}
-<section class="container-fluid">
-<table class="table">
+<section class="container-flex">
+{{!-- <table class="table">
     <thead class="thead-light">
         <tr>
             <th scope="col">Destino</th>
@@ -31,6 +31,26 @@
         </tr>
         {{/each}}
     </tbody>
-</table>
+</table> --}}
+
+<div class="d-flex flex-wrap justify-content-center">
+{{#each travels}}
+  <div class="card col-3">
+      <img src="../../upload/5slider.jpg" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{destino}}</h5>
+      <p class="card-text">{{fecha_salida}}-{{fecha_llegada}}</p>
+    </div>
+    <div class="card-footer">
+      <small class="text-muted">{{precio}}</small>
+      {{#if ../rolUser}}<small class="text-muted">Creado por:{{user.name}}</small>{{/if}}
+    </div>
+  </div>
+{{/each}}
+
+</div>
+
+
+
      {{#if rolUser}}<a href="/travels/add" class="btn btn-primary">Add Travel</a>{{/if}}
 </section>

@@ -3,7 +3,6 @@ var router = express.Router();
 let travelsController = require('../controllers/travelsController');
 let upload = require('../config/multer')
 
-/* GET users listing. */
 router.get('/', async (req, res) => {
     if (req.session.rol >= 0) {
         let rolUser = req.session.rol
