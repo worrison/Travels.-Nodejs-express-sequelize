@@ -69,6 +69,31 @@ async function hashear(id,pass){
     return  hashLink
 }
 
+async function userExist(email)
+{
+    console.log("email llegado",email)
+     let user = await models.user.findOne({ where: { email: email } })
+     console.log("usuario encontrado",user)
+     return user.length ? null:user
+}
+async function hashByUserId(userId)
+{
+    let hash = await models.hash.findOne({ where: { userId: userId } })
+    return hash.cadena
+}
+async function userIdByHash(hash)
+{
+    let userId = await models.hash.findOne({ where: { cadena: hash } })
+    return userId.id
+}
+async function updatePassword(id,password)
+{   
+    let passwordHash=await bcrypt.hash(password, SALT_ROUNDS );
+    hashear(id,passwordHash)
+    let updatePassUser=await models.user.update({password : passwordHash},{ where: { id: id } })
+    return updatePassUser
+    
+}
 module.exports = {
     listUsers,
     register,
@@ -76,5 +101,9 @@ module.exports = {
     actived,
     active,
     userId,
-    hashear
+    hashear,
+    userExist,
+    hashByUserId,
+    userIdByHash,
+    updatePassword
 };

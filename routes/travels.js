@@ -4,6 +4,8 @@ let travelsController = require('../controllers/travelsController');
 let upload = require('../config/multer')
 
 router.get('/', async (req, res) => {
+    let perfecto=req.flash("perfecto");
+    let error=req.flash("error");
     if (req.session.rol >= 0) {
         let rolUser = req.session.rol
         let travels = await travelsController.listTravels();

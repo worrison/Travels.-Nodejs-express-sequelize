@@ -42,6 +42,10 @@ a.navbar-brand img {
   margin-top: 20%;
   font-weight: 900;
 }
+.carousel-fade .carousel-item.active, .carousel-fade .carousel-item-next.carousel-item-left, .carousel-fade .carousel-item-prev.carousel-item-right {
+  z-index: auto!important;
+  opacity: 1;
+}
 .logo-slide{
   margin-top: -100px;
   margin-bottom: 20px;

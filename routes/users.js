@@ -19,13 +19,15 @@ EMAIL.transportar.use('compile', hbs(options));
 
 /* GET users listing. */
 router.get('/', async (req, res) => {
+  let perfecto=req.flash("perfecto");
+  
   if (req.session.rol == 1) {
     let users = await usersController.listUsers();
     res.render('../views/users/list', {
       users
     });
   } else {
-    req.flash('permisos', 'usuario sin permisos');
+    req.flash('error', 'usuario sin permisos');
     res.redirect('/');
   }
 });
@@ -37,7 +39,8 @@ router.get('/destroy', (req, res) => {
 
     
 router.get('/login', (req, res) => {
-  let error = req.flash('errors');
+  let error = req.flash('error');
+  let perfecto=req.flash("perfecto");
   if (req.session.name) {
     res.redirect('/');
   } else {
@@ -48,12 +51,15 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', async (req, res) => {
+  let perfecto=req.flash("perfecto");
+  let error=req.flash("error");
   let email = req.body.email;
   let password = req.body.password;
   let actived = await usersController.actived(email)
   if (actived) {
     if (!email || !password) {
-      req.flash('errors', 'Falta usuario o contraseña');
+      req.flash('error', 'Falta usuario o contraseña');
+      error=req.flash("error");
       res.redirect('/users/login')
     } else {
       let user = await usersController.checkLogin(email, password);
@@ -65,12 +71,13 @@ router.post('/login', async (req, res) => {
         req.session.logginDate = new Date();
         res.redirect('/travels');
       } else {
-        req.flash('errors', 'Usuario o contraseña inválido');
+        req.flash('error', 'Usuario o contraseña inválido');
+        error=req.flash("error");
         res.redirect('/users/login');
       }
     }
   } else {
-    req.flash('errors', 'Active su cuenta');
+    req.flash('error', 'Active su cuenta');
     res.redirect('/users/login')
   }
 });
@@ -80,7 +87,9 @@ router.get('/register', function (req, res) {
 });
 
 router.post('/register', async (req, res) => {
-
+  let perfecto=req.flash("perfecto");
+  let error=req.flash("error");
+  
   let { email,name,password} = req.body;
   let isRegistered = await usersController.register(email, password, name);
   let idUser = await usersController.userId(email)
@@ -105,18 +114,18 @@ router.post('/register', async (req, res) => {
 
     EMAIL.transportar.sendMail(message, (error, info) => {
       if (error) {
-        req.flash('activar', 'se registró pero no se pudo mandar el email de activación de su cuenta');
+        req.flash('error', 'se registró pero no se pudo mandar el email de activación de su cuenta');
         res.redirect('/users/register')
       } else {
         EMAIL.transportar.close();
-        req.flash('activar', 'comprueba su email para activar su cuenta');
+        req.flash('perfecto', 'comprueba su email para activar su cuenta');
         res.redirect('/users/login')
       }
 
     })
   } else 
   {
-    req.flash('permisos', 'No se pudo registrar faltan cmapos por rellenar');
+    req.flash('error', 'No se pudo registrar faltan cmapos por rellenar');
     res.redirect('/users/register');
   }
 });
@@ -125,7 +134,67 @@ router.post('/register', async (req, res) => {
 router.get('/active/:hash', async function (req, res) {
   let encript=encodeURIComponent(req.params.hash)
   let active = await usersController.active(encript);
-  res.render('../views/users/register');
+  req.flash('perfecto', 'usuario activado');
+  res.render('../views/users/login');
+});
+
+router.get('/password/forgot',function(req,res){
+  res.render('../views/users/paswordForgot');
+});
+
+router.post('/password/forgot', async function(req,res){
+  let email = req.body.email;
+  console.log("email",email)
+  let exist = await usersController.userExist(email)
+  console.log("exist",exist)
+  let hashByUserId = await usersController.hashByUserId(exist.id)
+  console.log("hahshah",hashByUserId)
+  if(exist.email.length > 0){
+    let message = {
+      to: exist.email,
+      subject: 'RECUPERACION DE PASSWORD',
+      template: 'recoveryPassword',
+      context: {
+        name: 'recuperación de password',
+        url: "http://127.0.0.1:3000/users/password/recovery/"+ hashByUserId
+      },
+      attachments: [{
+        filename: 'paciencia.jpg',
+        path: `${__dirname}/../paciencia.jpg`,
+        content: 'aqui tienes'
+      }]
+    }
+
+    EMAIL.transportar.sendMail(message, (error, info) => {
+      if (error) {
+        req.flash('error', 'No se consiguió recuperar la password de su cuenta');
+        res.redirect('/users/password/forgot')
+      } else {
+        EMAIL.transportar.close();
+        req.flash('perfecto', 'comprueba su email para recuperar su password');
+        res.redirect('/users/password/forgot')
+      }
+
+    })    
+  }
+  else
+  {
+    req.flash('error', 'No existe usuario con este email');
+    res.redirect('/password/forgot')
+  }
+});
+
+router.get('/password/recovery/:hash', async function (req, res) {
+  res.render('../views/users/passwordRecovery');
+});
+
+router.post('/password/recovery/:hash', async function (req, res) {
+  let encript=encodeURIComponent(req.params.hash)
+  let idUser = await usersController.userIdByHash(encript);
+  let password = req.body.password
+  let updateUser = await usersController.updatePassword(idUser,password)
+  req.flash('perfecto', 'usuario actualizado la password');
+  res.render('../views/users/login');
 });
 
 module.exports = router;

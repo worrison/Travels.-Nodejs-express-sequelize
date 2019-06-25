@@ -3,9 +3,9 @@
         ERROR: {{error}}
     </div>
 {{/if}}
-{{#if activar}}
-    <div class="alert aler-danger" role="alert">
-        Aviso: {{activar}}
+{{#if perfecto}}
+    <div class="alert alert-primary" role="alert">
+        Aviso: {{perfecto}}
     </div>
 {{/if}}
 <div class="container login-form">
@@ -31,6 +31,7 @@
     {{else}}
         <button type="submit" class="btn btn-primary">Login </button>
     {{/if}}
+    <a href="/users/password/forgot">Forgot your password?</a>
     </div>
 </form>
 </div>

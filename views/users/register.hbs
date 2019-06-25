@@ -3,6 +3,11 @@
          ERROR: {{error}}
     </div>
 {{/if}}
+{{#if perfecto}}
+    <div class="alert alert-primary" role="alert">
+        Aviso: {{perfecto}}
+    </div>
+{{/if}}
 {{!-- <form action="/users/register" method="post" class="container">
     <div class="form-group">
         <input type="text" class="form-control" name="name" placeholder="name">
@@ -29,7 +34,7 @@
                         <input type="text" class="form-control" name="name" placeholder="name">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="email" placeholder="email" required>
+                        <input type="email" class="form-control" name="email" placeholder="email" required>
                     </div>
                 </div>
                 <div class="col-md-6">

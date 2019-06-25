@@ -2,7 +2,9 @@
 // {
 //     req.sessio
 // }
-
+// function exist(){
+//     let {email} = req.body;
+// }
 
 
 
