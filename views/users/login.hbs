@@ -8,17 +8,30 @@
         Aviso: {{activar}}
     </div>
 {{/if}}
-<form action="/users/login" method="post" class="container">
-    <div class="form-group">
-        <label for="email">Email</label>
-        <input type="text" class="form-control" name="email" id="email" placeholder="email" required>
+<div class="container login-form">
+<form action="/users/login" method="post" class="form">
+    <div class="note">
+            <p>Login</p>
     </div>
-    <div class="form-group">
-        <input type="password" class="form-control" name="password" id="password" placeholder="password" required>
-    </div>
+    <div class="form-content">
+            <div class="row">
+                 <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="text" class="form-control" name="email" id="email" placeholder="email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="password" required>
+                    </div>
+                </div>
+            </div>
+    
     {{#if req.session.name}} 
         {{req.session.name}}
     {{else}}
         <button type="submit" class="btn btn-primary">Login </button>
     {{/if}}
+    </div>
 </form>
+</div>
+
