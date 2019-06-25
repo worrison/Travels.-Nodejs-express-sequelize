@@ -84,10 +84,10 @@ async function hashByUserId(userId)
 async function userIdByHash(hash)
 {
     let userId = await models.hash.findOne({ where: { cadena: hash } })
-    return userId.id
+    return userId.userId
 }
 async function updatePassword(id,password)
-{   
+{   console.log("id del usuario",id)
     let passwordHash=await bcrypt.hash(password, SALT_ROUNDS );
     hashear(id,passwordHash)
     let updatePassUser=await models.user.update({password : passwordHash},{ where: { id: id } })

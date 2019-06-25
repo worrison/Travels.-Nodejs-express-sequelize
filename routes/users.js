@@ -184,8 +184,17 @@ router.post('/password/forgot', async function(req,res){
   }
 });
 
+router.get('/password/recovery/', async function (req, res) {
+  res.render('../views/users/passwordRecovery',{
+    encript
+  });
+});
+
 router.get('/password/recovery/:hash', async function (req, res) {
-  res.render('../views/users/passwordRecovery');
+  let encript=encodeURIComponent(req.params.hash)
+  res.render('../views/users/passwordRecovery',{
+    encript
+  });
 });
 
 router.post('/password/recovery/:hash', async function (req, res) {
@@ -193,6 +202,7 @@ router.post('/password/recovery/:hash', async function (req, res) {
   let idUser = await usersController.userIdByHash(encript);
   let password = req.body.password
   let updateUser = await usersController.updatePassword(idUser,password)
+  console.log("actualizado?",updateUser)
   req.flash('perfecto', 'usuario actualizado la password');
   res.render('../views/users/login');
 });
