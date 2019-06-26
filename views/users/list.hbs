@@ -10,6 +10,7 @@
             <th scope="col">Name</th>
             <th scope="col">Email</th>
             <th scope="col">Rol</th>
+            <th scope="col">Activo</th>
             <th scope="col"></th>
             <th scope="col"></th>
         </tr>
@@ -20,6 +21,7 @@
             <td>{{name}}</td>
             <td>{{email}}</td>
             <td>{{#if rol}}Admin{{else}}User{{/if}}</td>
+            <td>{{#if active}}Activado{{else}}Desactivado{{/if}}</td>
             <td><a href="/users/edit/{{id}}">edit</a></td>
             <td><a href="">X</a></td>
         </tr>

@@ -24,9 +24,6 @@ router.get('/', async (req, res) => {
   
   if (req.session.rol == 1) {
     let users = await usersController.listUsers();
-    console.log("usuarios datos",users);
-    req.flash('perfecto', 'Buenos dias');
-    perfecto=req.flash("perfecto")
     res.render('../views/users/list', {
       users,
       perfecto
@@ -152,11 +149,8 @@ router.get('/password/forgot',function(req,res){
 
 router.post('/password/forgot', async function(req,res){
   let email = req.body.email;
-  console.log("email",email)
   let exist = await usersController.userExist(email)
-  console.log("exist",exist)
   let hashByUserId = await usersController.hashByUserId(exist.id)
-  console.log("hahshah",hashByUserId)
   if(exist.email.length > 0){
     let message = {
       to: exist.email,
@@ -211,10 +205,9 @@ router.post('/password/recovery/:hash', async function (req, res) {
   let perfecto=req.flash("perfecto");
   let encript=encodeURIComponent(req.params.hash)
   let idUser = await usersController.userIdByHash(encript);
-  console.log("usuario a actualizar",idUser);
   let password = req.body.password
   let updateUser = await usersController.updatePassword(idUser,password)
-  console.log("actualizado?",updateUser)
+
   req.flash('perfecto', 'actualizada la password');
   res.render('users/login',{
     perfecto
@@ -223,9 +216,8 @@ router.post('/password/recovery/:hash', async function (req, res) {
 
 router.get('/edit/:id', async function (req, res) {
   let idUser = req.params.id;
-  console.log("idusuario",idUser);
   let userData=await usersController.findUserById(idUser)
-  console.log("userdata",userData);
+
   res.render('../views/users/editUser',{
     userData
   });
@@ -235,12 +227,51 @@ router.post('/edit/:id', async function (req, res) {
   let idUser = req.params.id;
   let admin = req.body.admin;
   let active= req.body.active;
+  let sendEmail= req.body.email;
+  let user=await usersController.findUserById(idUser)
+  console.log("email",sendEmail);
+
+if(sendEmail=="on")
+{
+  console.log("hola");
+  let hashByUserId = await usersController.hashByUserId(idUser)
+  console.log("dato",hashByUserId);
+  let message = {
+    to: user.email,
+    subject: 'ACTIVACIÓN DE USUARIO',
+    template: 'email-template',
+    context: {
+      name: 'Activación de cuenta',
+      url: "http://127.0.0.1:3000/users/active/"+ hashByUserId
+    },
+    attachments: [{
+      filename: 'paciencia.jpg',
+      path: `${__dirname}/../paciencia.jpg`,
+      content: 'aqui tienes'
+    }]
+  }
+
+  EMAIL.transportar.sendMail(message, (error, info) => {
+    if (error) {
+      req.flash('error', 'se registró pero no se pudo mandar el email de activación de su cuenta');
+      res.redirect('/users/register')
+    } else {
+      EMAIL.transportar.close();
+      req.flash('perfecto', 'comprueba su email para activar su cuenta');
+      res.redirect('/users/login')
+    }
+
+  })
+}
+  
+
+
   //por defecto si no marcas ningun valor en el check box es undefined
   admin !="on"? admin=0 : admin=1
   active !="on"? active=0 : active=1
   let updateUser = await usersController.updateStates(idUser,admin,active)
   req.flash('perfecto', 'actualizado el usuario');
-  perfecto=req.flash("perfecto");
+  perfecto=req.flash('perfecto');
   res.redirect('/users/');
 });
 
