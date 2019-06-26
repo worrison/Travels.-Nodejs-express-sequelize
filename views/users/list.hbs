@@ -1,3 +1,9 @@
+{{#if error}}
+    <p>ERROR: {{error}}</p>
+{{/if}}
+{{#if perfecto}}
+    <p class="alert alert-primary"> {{perfecto}}</p>
+{{/if}}
 <table class="table container-fluid">
     <thead class="thead-light">
         <tr>
@@ -14,7 +20,7 @@
             <td>{{name}}</td>
             <td>{{email}}</td>
             <td>{{#if rol}}Admin{{else}}User{{/if}}</td>
-            <td><a href="">edit</a></td>
+            <td><a href="/users/edit/{{id}}">edit</a></td>
             <td><a href="">X</a></td>
         </tr>
         {{/each}}

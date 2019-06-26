@@ -78,7 +78,9 @@ async function userExist(email)
 }
 async function hashByUserId(userId)
 {
-    let hash = await models.hash.findOne({ where: { userId: userId } })
+    let hash = await models.hash.findOne({ where: { userId: userId }, order: [
+        ['createdAt', 'DESC']
+    ], })
     return hash.cadena
 }
 async function userIdByHash(hash)

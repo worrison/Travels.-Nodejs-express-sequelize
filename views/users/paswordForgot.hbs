@@ -1,3 +1,9 @@
+{{#if error}}
+    <p>ERROR: {{error}}</p>
+{{/if}}
+{{#if perfecto}}
+    <p> {{perfecto}}</p>
+{{/if}}
 <div class="container login-form">
 <form action="/users/password/forgot/" method="post" class="form">
     <div class="note">

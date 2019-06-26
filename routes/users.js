@@ -19,15 +19,21 @@ EMAIL.transportar.use('compile', hbs(options));
 
 /* GET users listing. */
 router.get('/', async (req, res) => {
-  let perfecto=req.flash("perfecto");
+  let perfecto;
+  let error;
   
   if (req.session.rol == 1) {
     let users = await usersController.listUsers();
+    console.log("usuarios datos",users);
+    req.flash('perfecto', 'Buenos dias');
+    perfecto=req.flash("perfecto")
     res.render('../views/users/list', {
-      users
+      users,
+      perfecto
     });
   } else {
     req.flash('error', 'usuario sin permisos');
+    error=req.flash("error")
     res.redirect('/');
   }
 });
@@ -40,12 +46,15 @@ router.get('/destroy', (req, res) => {
     
 router.get('/login', (req, res) => {
   let error = req.flash('error');
-  let perfecto=req.flash("perfecto");
+  let perfecto;
   if (req.session.name) {
     res.redirect('/');
   } else {
-    res.render('../views/users/login', {
-      error
+    req.flash("perfecto","logueate mamon")
+    perfecto=req.flash("perfecto")
+    res.render('users/login', {
+      error,
+      perfecto
     });
   }
 });
@@ -69,10 +78,9 @@ router.post('/login', async (req, res) => {
         req.session.userId = user.id;
         req.session.rol = user.rol;
         req.session.logginDate = new Date();
-        res.redirect('/travels');
+        res.redirect('/users');
       } else {
         req.flash('error', 'Usuario o contraseña inválido');
-        error=req.flash("error");
         res.redirect('/users/login');
       }
     }
@@ -166,12 +174,16 @@ router.post('/password/forgot', async function(req,res){
     }
 
     EMAIL.transportar.sendMail(message, (error, info) => {
+      let perfecto;
+      let error;
       if (error) {
         req.flash('error', 'No se consiguió recuperar la password de su cuenta');
-        res.redirect('/users/password/forgot')
+        error=req.flash("error")
+        res.redirect('/users/password/recovery/')
       } else {
         EMAIL.transportar.close();
         req.flash('perfecto', 'comprueba su email para recuperar su password');
+        perfecto=req.flash("perfecto");
         res.redirect('/users/password/forgot')
       }
 
@@ -180,15 +192,13 @@ router.post('/password/forgot', async function(req,res){
   else
   {
     req.flash('error', 'No existe usuario con este email');
-    res.redirect('/password/forgot')
+    res.redirect('/password/recovery/')
   }
 });
 
-router.get('/password/recovery/', async function (req, res) {
-  res.render('../views/users/passwordRecovery',{
-    encript
-  });
-});
+// router.get('/password/recovery/', async function (req, res) {
+//   res.render('../views/users/passwordRecovery');
+// });
 
 router.get('/password/recovery/:hash', async function (req, res) {
   let encript=encodeURIComponent(req.params.hash)
@@ -198,13 +208,21 @@ router.get('/password/recovery/:hash', async function (req, res) {
 });
 
 router.post('/password/recovery/:hash', async function (req, res) {
+  let perfecto=req.flash("perfecto");
   let encript=encodeURIComponent(req.params.hash)
   let idUser = await usersController.userIdByHash(encript);
+  console.log("usuario a actualizar",idUser);
   let password = req.body.password
   let updateUser = await usersController.updatePassword(idUser,password)
   console.log("actualizado?",updateUser)
-  req.flash('perfecto', 'usuario actualizado la password');
-  res.render('../views/users/login');
+  req.flash('perfecto', 'actualizada la password');
+  res.render('users/login',{
+    perfecto
+  });
+});
+
+router.get('/edit/:id', async function (req, res) {
+  res.render('../views/users/editUser');
 });
 
 module.exports = router;

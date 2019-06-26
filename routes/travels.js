@@ -6,18 +6,18 @@ let upload = require('../config/multer')
 router.get('/', async (req, res) => {
     let perfecto=req.flash("perfecto");
     let error=req.flash("error");
-    if (req.session.rol >= 0) {
+    // if (req.session.rol >= 0) {
         let rolUser = req.session.rol
         let travels = await travelsController.listTravels();
         res.render('../views/travels/list', {
             travels,
             rolUser
         });
-    } else {
-        req.flash('error', 'usuario sin permisos');
-        res.redirect('/');
+    // } else {
+    //     req.flash('error', 'usuario sin permisos');
+    //     res.redirect('/');
 
-    }
+    // }
 });
 
 router.get('/add', function (req, res) {
