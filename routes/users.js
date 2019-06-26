@@ -215,14 +215,17 @@ router.post('/password/recovery/:hash', async function (req, res) {
 });
 
 router.get('/edit/:id', async function (req, res) {
+  if (req.session.rol == 1) {
   let idUser = req.params.id;
   let userData=await usersController.findUserById(idUser)
 
   res.render('../views/users/editUser',{
     userData
   });
+}
 });
 router.post('/edit/:id', async function (req, res) {
+  if (req.session.rol == 1) {
   let perfecto;
   let idUser = req.params.id;
   let admin = req.body.admin;
@@ -236,6 +239,7 @@ if(sendEmail=="on")
   console.log("hola");
   let hashByUserId = await usersController.hashByUserId(idUser)
   console.log("dato",hashByUserId);
+  console.log(user.email);
   let message = {
     to: user.email,
     subject: 'ACTIVACIÓN DE USUARIO',
@@ -263,9 +267,6 @@ if(sendEmail=="on")
 
   })
 }
-  
-
-
   //por defecto si no marcas ningun valor en el check box es undefined
   admin !="on"? admin=0 : admin=1
   active !="on"? active=0 : active=1
@@ -273,6 +274,7 @@ if(sendEmail=="on")
   req.flash('perfecto', 'actualizado el usuario');
   perfecto=req.flash('perfecto');
   res.redirect('/users/');
+}
 });
 
 module.exports = router;
