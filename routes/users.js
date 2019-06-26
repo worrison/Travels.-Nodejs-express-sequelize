@@ -222,7 +222,26 @@ router.post('/password/recovery/:hash', async function (req, res) {
 });
 
 router.get('/edit/:id', async function (req, res) {
-  res.render('../views/users/editUser');
+  let idUser = req.params.id;
+  console.log("idusuario",idUser);
+  let userData=await usersController.findUserById(idUser)
+  console.log("userdata",userData);
+  res.render('../views/users/editUser',{
+    userData
+  });
+});
+router.post('/edit/:id', async function (req, res) {
+  let perfecto;
+  let idUser = req.params.id;
+  let admin = req.body.admin;
+  let active= req.body.active;
+  //por defecto si no marcas ningun valor en el check box es undefined
+  admin !="on"? admin=0 : admin=1
+  active !="on"? active=0 : active=1
+  let updateUser = await usersController.updateStates(idUser,admin,active)
+  req.flash('perfecto', 'actualizado el usuario');
+  perfecto=req.flash("perfecto");
+  res.redirect('/users/');
 });
 
 module.exports = router;

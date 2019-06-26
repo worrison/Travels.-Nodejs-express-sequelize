@@ -3,9 +3,13 @@ const bcrypt = require('bcrypt');
 const SALT_ROUNDS = 10;
 
 
-function listUsers()
+async function listUsers()
 {
-    return models.user.findAll()
+    return await models.user.findAll()
+}
+async function findUserById(id)
+{
+    return await models.user.findOne({ where: { id: id } })
 }
 
 async function register(email,password,name){
@@ -96,6 +100,14 @@ async function updatePassword(id,password)
     return updatePassUser
     
 }
+
+async function updateStates(idUser,admin,active)
+{  
+    
+    let updateStateUser=await models.user.update({rol : admin, active : active},{ where: { id: idUser } })
+    return updateStateUser
+    
+}
 module.exports = {
     listUsers,
     register,
@@ -107,5 +119,7 @@ module.exports = {
     userExist,
     hashByUserId,
     userIdByHash,
-    updatePassword
+    updatePassword,
+    findUserById,
+    updateStates
 };
