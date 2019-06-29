@@ -57,5 +57,26 @@ router.post('/delete/:id', async function (req, res){
     }
 })
 
+// router.get('/edit/:idTravel', async function (req,res){
+//     let idTravel=req.params.idTravel;
+//     console.log("estas?",idTravel);
+//     let dataTravel=await travelsController.detailTravel(idTravel);
+//     res.render('../views/travels/edit',{
+//         dataTravel
+//     });
+// })
+
+router.get('/detail/:idTravel', async function (req,res){
+    let idTravel=req.params.idTravel;
+    console.log("estas?",idTravel);
+    let dataTravel=await travelsController.detailTravel(idTravel);
+    let listImages=await travelsController.getListImages(idTravel);
+    console.log("imagenes",listImages);
+    res.render('../views/travels/detail',{
+        dataTravel,
+        listImages
+    });
+})
+
 
 module.exports = router;
