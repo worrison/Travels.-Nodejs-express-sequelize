@@ -172,10 +172,10 @@ router.post('/password/forgot', async function (req, res) {
 
     EMAIL.transportar.sendMail(message, (error, info) => {
       let perfecto;
-      let error;
+      let error2;
       if (error) {
         req.flash('error', 'No se consiguió recuperar la password de su cuenta');
-        error = req.flash("error")
+        error2 = req.flash("error")
         res.redirect('/users/password/recovery/')
       } else {
         EMAIL.transportar.close();

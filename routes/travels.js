@@ -9,8 +9,37 @@ router.get('/', async (req, res) => {
     // if (req.session.rol >= 0) {
         let rolUser = req.session.rol
         let travels = await travelsController.listTravels();
+        let imagesTravels = await travelsController.getAllImages()
+        // console.log("eaea",imagesTravels[0].images[0].url)
+        console.log("eaea",imagesTravels[13].images[0].url)
+
+        // let dataTravel = {
+        //     travel:{...travels},
+        //     mainImage:""
+        // }
+        // let datos=[dataTravel]
+
+
+
+        // console.log(travels[0].id);
+        // for(let i=0; i<travels.length; i++)
+        // {
+        //     datos[i].dataTravel.travel=travels[i];
+        //     try{
+        //         let imagesTravels = await travelsController.getListImages(travels[i].id)
+        //         datos[i].dataTravel.mainImage=imagesTravels[0];
+        //     }
+        //     catch(e)
+        //     {
+        //         return "error"
+        //     }
+        
+
+        // }
+    
         res.render('../views/travels/list', {
             travels,
+            imagesTravels,
             rolUser
         });
     // } else {
@@ -71,10 +100,12 @@ router.get('/detail/:idTravel', async function (req,res){
     console.log("estas?",idTravel);
     let dataTravel=await travelsController.detailTravel(idTravel);
     let listImages=await travelsController.getListImages(idTravel);
-    console.log("imagenes",listImages);
+    let mainImage=listImages[0].url;
+    console.log("imagenes",listImages[0].url);
     res.render('../views/travels/detail',{
         dataTravel,
-        listImages
+        listImages,
+        mainImage
     });
 })
 

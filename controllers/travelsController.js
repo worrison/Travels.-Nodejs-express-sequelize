@@ -21,10 +21,10 @@ function addTravel(travel,userId)
   }
   return models.travel.create(travelAdd);
 }
-function removeTravel(travelId)
-{
-  return models.travel.destroy({ where: { id: travelId } }).then()
-}
+// function removeTravel(travelId)
+// {
+//   return models.travel.destroy({ where: { id: travelId } }).then()
+// }
 
 function uploadImages(idTravel,urlImage)
 {
@@ -38,11 +38,20 @@ async function getListImages(idTravel)
 {
   return await models.image.findAll({ where: { travelId: idTravel } })
 }
+async function getAllImages()
+{
+  return await models.travel.findAll({
+    include: [{
+        model: models.image,
+        limit: 1
+      }]
+    })
+}
 module.exports = {
     listTravels,
     addTravel,
     uploadImages,
-    removeTravel,
     detailTravel,
-    getListImages
+    getListImages,
+    getAllImages
 };
